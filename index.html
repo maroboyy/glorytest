@@ -11,7 +11,7 @@
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <link rel="apple-touch-icon" href="Assets/Logos/Icon Glory.png">
   <title>Glory - 5th Anniversary</title>
-  <link rel="icon" type="image/png" href="Assets/Logos/Icon Glory.png">
+  <link rel="icon" type="image/png" href="/Assets/Logos/Icon Glory.png">
   <script src="script.js"></script>
   <style>
     @font-face {
@@ -929,11 +929,57 @@
     @keyframes fadeOutSplash { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
 
     /* ==========================================
-       TARGETED FIX FOR IPHONE 12/13/14/15 PRO (390px - 430px)
+       TARGETED FIX FOR IPHONE PRO / MOBILE (375px - 430px)
     ========================================== */
     @media (max-width: 430px) {
       body {
-        padding: 10px;
+        padding: 16px;
+      }
+
+      /* Expanded margins & spacing specifically for Screen 6 (Card Selection) */
+      .card-selection-screen {
+        padding: 20px 16px;
+      }
+
+      .cards-main-title {
+        font-size: 1.65rem;
+        margin-bottom: 24px;
+      }
+
+      .cards-grid-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+        padding: 0 10px;
+      }
+
+      .gift-card-item {
+        width: 100%;
+        max-width: 250px;
+        min-width: 0;
+      }
+
+      .card-preview-wrapper {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        border-radius: 16px;
+      }
+
+      .card-select-btn {
+        margin-top: 12px;
+        width: 130px;
+        padding: 9px 0;
+        font-size: 0.95rem;
+        border-radius: 20px;
+      }
+
+      .card-image-desktop {
+        display: none;
+      }
+
+      .card-image-mobile {
+        display: block;
       }
 
       .timeline-container {
@@ -968,33 +1014,6 @@
 
       .node-title {
         font-size: 0.9rem;
-      }
-
-      .cards-grid-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
-        width: 100%;
-      }
-
-      .gift-card-item {
-        width: 100%;
-        max-width: 260px;
-        min-width: 0;
-      }
-
-      .card-preview-wrapper {
-        width: 100%;
-        aspect-ratio: 16 / 10;
-        border-radius: 14px;
-      }
-
-      .card-image-desktop {
-        display: none;
-      }
-
-      .card-image-mobile {
-        display: block;
       }
 
       .name-input {
