@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#a38258">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Glory 5th Anniversary">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+  <link rel="apple-touch-icon" href="/Assets/Logos/Icon Glory.png">
+  <title>Glory - 5th Anniversary</title>
+  <link rel="icon" type="image/png" href="/Assets/Logos/Icon Glory.png">
+  <script src="/script.js"></script>
+  <style>
+    @font-face {
+      font-family: 'GE SS Two';
+      src: url('Fonts/ArbFONTS-GE_SS_Two_Light.otf') format('opentype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'GE SS Two';
+      src: url('Fonts/ArbFONTS-GE_SS_Two_Medium.otf') format('opentype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'GE SS Two';
+      src: url('Fonts/ArbFONTS-GE_SS_Two_Bold.otf') format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --gold-primary: #a38258;
+      --gold-hover: #c5a059;
+      --gold-bright: #ffd700;
+      --gold-gradient: linear-gradient(135deg, #a38258 0%, #f3e5ab 50%, #c5a059 100%);
+      --bg-light: #EFEFEF;
+      --text-dark: #4A4D50;
+      --text-muted: #8C9095;
+      --btn-bg: #8C8F94;
+      --btn-hover: #6D7075;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'GE SS Two', 'Tajawal', sans-serif;
+      background-color: var(--bg-light);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: 100dvh;
+      min-width: 320px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    button {
+      touch-action: manipulation;
+    }
+
+    /* ==========================================
+       SCREEN 1: SPLASH SCREEN
+    ========================================== */
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: -webkit-fill-available;
+      height: 100dvh;
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      min-height: 100dvh;
+      background-color: #D5D8DC;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      animation: fadeOutSplash 1s ease-in-out forwards;
+      animation-delay: 3.5s;
+    }
+
+    .logo-wrapper {
+      position: relative;
+      width: clamp(240px, 40vw, 380px);
+      height: clamp(240px, 40vw, 380px);
+      min-width: 200px;
+      min-height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-asset {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+      animation: scaleIn 0.8s ease-out forwards;
+    }
+
+    .ring-overlay {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: calc(100% + 20px);
+      height: calc(100% + 20px);
+      pointer-events: none;
+    }
+
+    .ring {
+      fill: none;
+      stroke-linecap: round;
+      transform-origin: center;
+    }
+
+    .outer-ring {
+      stroke: #0d0d0d;
+      stroke-width: 4;
+      stroke-dasharray: 1288;
+      stroke-dashoffset: 1288;
+      animation: drawRing 2s cubic-bezier(0.77, 0, 0.175, 1) forwards,
+                 spinClockwise 3s linear forwards;
+    }
+
+    .inner-ring {
+      stroke: var(--gold-primary);
+      stroke-width: 2;
+      stroke-dasharray: 1068;
+      stroke-dashoffset: 1068;
+      animation: drawRing 2s cubic-bezier(0.77, 0, 0.175, 1) forwards 0.2s,
+                 spinCounterClockwise 3s linear forwards;
+    }
+
+    /* ==========================================
+       SCREEN 2: WELCOME SCREEN
+    ========================================== */
+    .welcome-screen,
+    .journey-screen,
+    .gift-input-screen,
+    .gift-box-screen,
+    .card-selection-screen,
+    .result-view-screen,
+    .end-screen {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      height: fit-content;
+    }
+
+    .welcome-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 800px;
+      min-width: 300px;
+      padding: 40px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+    }
+
+    .welcome-screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .watermark-logo {
+      width: clamp(140px, 25vw, 220px);
+      height: clamp(140px, 25vw, 220px);
+      object-fit: contain;
+      opacity: 0.9; 
+      margin-bottom: 30px;
+    }
+
+    .heading-primary {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: #a38258;
+      margin-bottom: 10px;
+    }
+
+    .heading-secondary {
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      font-weight: 700;
+      color: #a38258;
+      margin-bottom: 45px;
+    }
+
+    .body-text {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 500;
+      color: #9C9FA4;
+      line-height: 1.8;
+    }
+
+    .next-btn {
+      margin-top: 35px;
+      padding: 12px 36px;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: var(--gold-primary);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(163, 130, 88, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .next-btn:hover {
+      background-color: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================
+       SCREEN 3: TIMELINE / JOURNEY SCREEN
+    ========================================== */
+    .journey-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 1100px;
+      min-width: 300px;
+      padding: 40px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+    }
+
+    .journey-screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .journey-title {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 700;
+      color: #a38258;
+      margin-bottom: 15px;
+    }
+
+    .journey-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 500;
+      color: var(--text-muted);
+      max-width: 750px;
+      line-height: 1.8;
+      margin-bottom: 60px;
+    }
+
+    .timeline-scroll {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .timeline-container {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 90px;
+      right: 50px;
+      left: 50px;
+      height: 4px;
+      background: #D5D8DC;
+      z-index: 1;
+    }
+
+    .timeline-line-progress {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: var(--progress, 0%);
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-primary), #ffe89e, var(--gold-hover));
+      background-size: 200% 100%;
+      z-index: 1;
+      transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .timeline-node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      width: 110px;
+    }
+
+    .node-text {
+      display: contents;
+    }
+
+    .year-label { order: 1; }
+    .icon-circle { order: 2; }
+    .node-title { order: 3; }
+
+    .year-label {
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      font-weight: 700;
+      color: #7F8489;
+      margin-bottom: 18px;
+      transition: color 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    .icon-circle {
+      position: relative;
+      width: clamp(70px, 9vw, 100px);
+      height: clamp(70px, 9vw, 100px);
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: 3px solid #C0C4C8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+
+    .icon-circle img {
+      width: clamp(32px, 4vw, 48px);
+      height: clamp(32px, 4vw, 48px);
+      object-fit: contain;
+      filter: invert(40%) sepia(10%) saturate(200%) hue-rotate(180deg);
+      transition: filter 0.4s ease;
+      z-index: 3;
+    }
+
+    .node-title {
+      margin-top: 20px;
+      font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+      font-weight: 700;
+      color: var(--text-dark);
+      transition: color 0.4s ease;
+    }
+
+    .timeline-node.passed .year-label { color: var(--gold-primary); }
+    .timeline-node.passed .icon-circle { background: var(--gold-gradient); border-color: #ffe599; }
+    .timeline-node.passed .icon-circle img { filter: brightness(0) invert(1); }
+
+    .timeline-node.active .year-label {
+      color: #b8860b;
+      text-shadow: 0 0 12px rgba(218, 165, 32, 0.6);
+    }
+
+    .timeline-node.active .icon-circle {
+      background: var(--gold-gradient);
+      background-size: 200% 200%;
+      border-color: #ffe599;
+      transform: scale(1.12);
+      box-shadow: 0 0 25px rgba(225, 185, 80, 0.8), 0 0 45px rgba(163, 130, 88, 0.4);
+      animation: goldGlow 1.5s ease-in-out infinite alternate;
+    }
+
+    .timeline-node.active .icon-circle img { filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .timeline-node.active .node-title { color: #a38258; font-weight: 800; }
+
+    .claim-gift-btn {
+      margin-top: 55px;
+      padding: 14px 40px;
+      font-family: inherit;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: var(--gold-primary);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(163, 130, 88, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(15px);
+      transition: all 0.5s ease;
+    }
+
+    .claim-gift-btn.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* ==========================================
+       SCREEN 4: NAME INPUT SCREEN
+    ========================================== */
+    .gift-input-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 650px;
+      min-width: 300px;
+      padding: 40px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+    }
+
+    .gift-input-screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .gift-title {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      color: #a38258;
+      margin-bottom: 8px;
+    }
+
+    .gift-subtitle {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 500;
+      color: #a38258;
+      margin-bottom: 40px;
+    }
+
+    .input-form {
+      width: 100%;
+      max-width: 440px;
+      min-width: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .name-input {
+      width: 100%;
+      padding: 16px 24px;
+      font-family: 'GE SS Two', 'Tajawal', sans-serif;
+      font-size: 1.15rem;
+      color: #55585c;
+      text-align: center;
+      direction: ltr;
+      background-color: transparent;
+      border: 2px solid #a6a9ad;
+      border-radius: 18px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 25px;
+    }
+
+    .name-input::placeholder {
+      color: #a0a3a8;
+      direction: rtl;
+    }
+
+    .name-input:focus {
+      border-color: #6c7075;
+      box-shadow: 0 0 10px rgba(108, 112, 117, 0.15);
+    }
+
+    .submit-btn {
+      padding: 12px 50px;
+      font-family: 'GE SS Two', 'Tajawal', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: #797c81;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #63666a;
+      transform: translateY(-2px);
+    }
+
+    .error-msg {
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: #d9534f;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .error-msg.visible { opacity: 1; }
+
+    /* ==========================================
+       SCREEN 5: GIFT BOX SCREEN
+    ========================================== */
+    .gift-box-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 650px;
+      min-width: 300px;
+      padding: 40px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
+    }
+
+    .gift-box-screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .gift-image-wrapper {
+      position: relative;
+      width: clamp(220px, 45vw, 320px);
+      max-width: 85vw;
+      margin-bottom: 30px;
+      cursor: pointer;
+      animation: giftShake 2.5s ease-in-out infinite, giftGlow 2.5s ease-in-out infinite;
+      transform-origin: center bottom;
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+
+    .gift-image-wrapper:hover {
+      animation: giftShake 1.2s ease-in-out infinite, giftGlow 1.2s ease-in-out infinite;
+      transform: scale(1.08);
+    }
+
+    .gift-image-wrapper.open-anim {
+      animation: giftUnbox 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+      pointer-events: none;
+    }
+
+    .gift-image-asset {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .claim-action-text {
+      font-size: clamp(1.5rem, 3.5vw, 2.3rem);
+      font-weight: 700;
+      color: #a38258;
+      letter-spacing: -0.5px;
+      user-select: none;
+      transition: opacity 0.4s ease;
+    }
+
+    /* ==========================================
+       SCREEN 6: CHOOSE YOUR GIFT
+    ========================================== */
+    .card-selection-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 1150px;
+      min-width: 300px;
+      padding: 30px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.95);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
+    }
+
+    .card-selection-screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+
+    .cards-main-title {
+      font-size: clamp(2rem, 4.5vw, 2.8rem);
+      font-weight: 800;
+      color: #a38258;
+      margin-bottom: 45px;
+      transition: opacity 0.4s ease;
+    }
+
+    .cards-grid-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 30px;
+    }
+
+    .gift-card-item {
+      flex: 1;
+      max-width: 320px;
+      min-width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease, filter 0.5s ease;
+    }
+
+    .card-selection-screen.active .gift-card-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-selection-screen.active .gift-card-item:nth-child(1) { transition-delay: 0.15s; }
+    .card-selection-screen.active .gift-card-item:nth-child(2) { transition-delay: 0.30s; }
+    .card-selection-screen.active .gift-card-item:nth-child(3) { transition-delay: 0.45s; }
+
+    .card-preview-wrapper {
+      position: relative;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      cursor: pointer;
+    }
+
+    .card-preview-wrapper:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 25px rgba(163, 130, 88, 0.3);
+    }
+
+    .card-image-asset {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    /* Desktop set shown by default, mobile set hidden by default */
+    .card-image-desktop {
+      display: block;
+    }
+
+    .card-image-mobile {
+      display: none;
+    }
+
+    .card-select-btn {
+      margin-top: 22px;
+      width: 80%;
+      padding: 12px 0;
+      font-family: 'GE SS Two', 'Tajawal', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: var(--btn-bg);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .gift-card-item:hover .card-select-btn {
+      background-color: var(--gold-primary);
+      box-shadow: 0 6px 18px rgba(163, 130, 88, 0.35);
+      transform: translateY(-2px);
+    }
+
+    /* CARD ANIMATION STATES ON SELECTION */
+    .gift-card-item.selected-card {
+      transform: scale(1.1) translateY(-10px) !important;
+      z-index: 10;
+    }
+
+    .gift-card-item.selected-card .card-preview-wrapper {
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.8), 0 15px 35px rgba(163, 130, 88, 0.5) !important;
+      animation: cardPulse 0.8s ease-in-out infinite alternate;
+    }
+
+    .gift-card-item.unselected-card {
+      opacity: 0 !important;
+      transform: translateY(50px) scale(0.9) !important;
+      pointer-events: none;
+    }
+
+    /* ==========================================
+       SCREEN 7: RESULT VIEWS
+    ========================================== */
+    .result-view-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 900px;
+      min-width: 300px;
+      padding: 30px 20px;
+      text-align: center;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .result-view-screen.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-title {
+      font-size: clamp(2rem, 4.5vw, 2.8rem);
+      font-weight: 800;
+      color: #a38258;
+      margin-bottom: 35px;
+    }
+
+    .vertical-display-card {
+      width: 100%;
+      max-width: 360px;
+      min-width: 240px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    .horizontal-display-card {
+      width: 100%;
+      max-width: 720px;
+      min-width: 280px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    .printable-canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 24px;
+    }
+
+    .display-card-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .action-buttons-group {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      min-width: 130px;
+      padding: 12px 28px;
+      font-family: 'GE SS Two', 'Tajawal', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: var(--btn-bg);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background-color: var(--btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-btn.btn-gold {
+      background-color: var(--gold-primary);
+    }
+
+    .action-btn.btn-gold:hover {
+      background-color: var(--gold-hover);
+    }
+
+    /* ==========================================
+       SCREEN 8: END SCREEN
+    ========================================== */
+    .end-screen {
+      position: absolute;
+      width: 100%;
+      max-width: 800px;
+      min-width: 300px;
+      padding: 40px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+    }
+
+    .end-screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .end-logo {
+      width: 320px;
+      max-width: 80vw;
+      height: auto;
+      object-fit: contain;
+      margin-bottom: 40px;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+    }
+
+    .end-primary-text {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: #a38258;
+      margin-bottom: 15px;
+      line-height: 1.3;
+    }
+
+    .end-secondary-text {
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 500;
+      color: #a38258;
+    }
+
+    /* Keyframes */
+    @keyframes cardPulse {
+      0% { transform: scale(1.05); }
+      100% { transform: scale(1.09); }
+    }
+
+    @keyframes giftShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      15% { transform: rotate(-6deg) scale(1.02); }
+      30% { transform: rotate(5deg) scale(1.02); }
+      45% { transform: rotate(-4deg) scale(1.01); }
+      60% { transform: rotate(3deg) scale(1.01); }
+      75% { transform: rotate(-1deg) scale(1); }
+    }
+
+    @keyframes giftGlow {
+      0%, 100% { filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15)) drop-shadow(0 0 5px rgba(163, 130, 88, 0.2)); }
+      50% { filter: drop-shadow(0 15px 25px rgba(163, 130, 88, 0.4)) drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
+    }
+
+    @keyframes giftUnbox {
+      0% { transform: scale(1) rotate(0deg); opacity: 1; }
+      50% { transform: scale(1.25) rotate(-5deg); opacity: 0.8; filter: brightness(1.5) drop-shadow(0 0 35px #ffd700); }
+      100% { transform: scale(1.8); opacity: 0; filter: brightness(2); }
+    }
+
+    @keyframes goldGlow {
+      0% { box-shadow: 0 0 15px rgba(225, 185, 80, 0.6); }
+      100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+    }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+    @keyframes drawRing { to { stroke-dashoffset: 0; } }
+    @keyframes spinClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes spinCounterClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+    @keyframes fadeOutSplash { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
+
+    /* Responsive Media Queries for Mobile/Tablet Breakpoints */
+    @media (max-width: 900px) {
+      .timeline-scroll {
+        justify-content: center;
+      }
+      .timeline-container {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+        gap: 16px; /* Optimized spacing based on red marks */
+        padding: 5px 0;
+      }
+      .timeline-line {
+        top: 25px;
+        bottom: 25px;
+        left: 28px;
+        right: auto;
+        transform: none;
+        width: 3px;
+        height: auto;
+      }
+      .timeline-line-progress {
+        top: 0;
+        left: 0;
+        right: auto;
+        width: 100%;
+        height: var(--progress, 0%);
+        background: linear-gradient(180deg, var(--gold-primary), #ffe89e, var(--gold-hover));
+        background-size: 100% 200%;
+        transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .timeline-node {
+        display: flex;
+        flex-direction: row;
+        direction: ltr;
+        align-items: center;
+        gap: 18px; /* Precise spacing between circle and text */
+        width: 100%;
+      }
+      .icon-circle {
+        order: 1;
+        flex-shrink: 0;
+      }
+      .node-text {
+        order: 2;
+        display: flex;
+        flex-direction: column;
+        direction: rtl;
+        text-align: right;
+        gap: 2px; /* Tight gap between year and title */
+        flex: 1;
+        min-width: 0;
+      }
+      .year-label {
+        font-size: 1.15rem;
+        margin-bottom: 0;
+      }
+      .node-title {
+        font-size: 0.95rem;
+      }
+      .icon-circle {
+        width: 54px;
+        height: 54px;
+      }
+      .icon-circle img {
+        width: 26px;
+        height: 26px;
+      }
+      .cards-main-title {
+        margin-bottom: 30px;
+      }
+      .cards-grid-container {
+        gap: 18px;
+      }
+      .gift-card-item {
+        max-width: 240px;
+        min-width: 0;
+      }
+      .horizontal-display-card {
+        max-width: 90vw;
+      }
+    }
+
+    /* Mobile: gift cards switch to a controlled vertical design stack matching your Sketch layout */
+    @media (max-width: 600px) {
+      .card-image-desktop {
+        display: none;
+      }
+      .card-image-mobile {
+        display: block;
+      }
+      .cards-main-title {
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+      }
+      .cards-grid-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+      }
+      .gift-card-item {
+        flex: none;
+        width: 100%;
+        min-width: 0;
+        max-width: 280px;
+      }
+      .card-preview-wrapper {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        height: auto;
+        border-radius: 14px;
+        background: #e2e2e2;
+      }
+      .card-image-asset {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card-select-btn {
+        margin-top: 10px;
+        width: 130px;
+        padding: 8px 0;
+        font-size: 0.95rem;
+        border-radius: 20px;
+      }
+    }
+
+    /* Tablet portrait / medium screens */
+    @media (max-width: 768px) {
+      .welcome-screen,
+      .journey-screen,
+      .gift-input-screen,
+      .gift-box-screen,
+      .card-selection-screen,
+      .result-view-screen,
+      .end-screen {
+        padding: 20px 14px; /* Reduced outer padding for tighter mobile fit */
+      }
+
+      .journey-screen {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
+
+      .journey-title {
+        margin-bottom: 6px;
+      }
+
+      .journey-subtitle {
+        margin-bottom: 24px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .claim-gift-btn {
+        margin-top: 25px;
+        padding: 12px 30px;
+        font-size: 1.05rem;
+      }
+
+      .action-buttons-group {
+        gap: 12px;
+      }
+
+      .action-btn {
+        min-width: 110px;
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      .next-btn, .submit-btn, .action-btn, .claim-gift-btn {
+        width: 100%;
+        padding: 14px 20px;
+        min-height: 48px;
+      }
+      .action-buttons-group {
+        flex-direction: column;
+        width: 100%;
+      }
+      .action-buttons-group .action-btn {
+        width: 100%;
+      }
+      .timeline-node {
+        max-width: 100%;
+      }
+      .cards-main-title {
+        margin-bottom: 20px;
+      }
+      .cards-grid-container {
+        gap: 18px;
+      }
+      .gift-card-item {
+        max-width: 260px;
+      }
+      .card-select-btn {
+        width: 130px;
+      }
+      .name-input {
+        font-size: 16px; /* prevent iOS auto-zoom on focus */
+        padding: 14px 18px;
+      }
+      .watermark-logo {
+        margin-bottom: 20px;
+      }
+      .end-logo {
+        margin-bottom: 24px;
+      }
+    }
+
+    /* Very small phones */
+    @media (max-width: 360px) {
+      .journey-title, .gift-title, .cards-main-title, .result-title {
+        font-size: 1.5rem;
+      }
+      .icon-circle {
+        width: 46px;
+        height: 46px;
+      }
+      .icon-circle img {
+        width: 22px;
+        height: 22px;
+      }
+      .timeline-container {
+        max-width: 240px;
+        gap: 12px;
+      }
+      .timeline-line {
+        left: 22px;
+      }
+      .year-label {
+        font-size: 1.05rem;
+      }
+      .node-title {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Short / landscape phones */
+    @media (max-height: 480px) and (orientation: landscape) {
+      .welcome-screen,
+      .journey-screen,
+      .gift-input-screen,
+      .gift-box-screen,
+      .card-selection-screen,
+      .result-view-screen,
+      .end-screen {
+        padding: 16px;
+      }
+      .watermark-logo,
+      .end-logo {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 14px;
+      }
+      .heading-primary, .journey-title, .gift-title, .cards-main-title, .result-title, .end-primary-text {
+        margin-bottom: 8px;
+      }
+      .body-text {
+        line-height: 1.4;
+      }
+      .journey-subtitle {
+        margin-bottom: 18px;
+      }
+      .claim-gift-btn {
+        margin-top: 20px;
+      }
+      .gift-image-wrapper {
+        width: clamp(140px, 30vw, 200px);
+        margin-bottom: 14px;
+      }
+      .vertical-display-card,
+      .horizontal-display-card {
+        margin-bottom: 16px;
+        max-height: 55vh;
+      }
+      .printable-canvas,
+      .display-card-img {
+        max-height: 55vh;
+        width: auto;
+        margin: 0 auto;
+      }
+    }
+
+    /* Touch-friendly tap targets */
+    @media (hover: none) and (pointer: coarse) {
+      .next-btn, .submit-btn, .action-btn, .claim-gift-btn, .card-select-btn {
+        min-height: 46px;
+      }
+      .timeline-node, .gift-card-item, .card-preview-wrapper, .gift-image-wrapper {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .card-preview-wrapper:hover,
+      .action-btn:hover,
+      .gift-image-wrapper:hover {
+        transform: none;
+      }
+    }
+
+    /* ==========================================
+       TARGETED MOBILE SPACING ADJUSTMENTS 
+       (Strictly matching your red-marked sketches)
+    ========================================== */
+    @media (max-width: 600px) {
+      /* Screen 7-A (Badge Result View) */
+      #badgeResultScreen {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        justify-content: flex-start !important;
+      }
+      #badgeResultScreen .result-title {
+        margin-top: 10px !important;
+        margin-bottom: 20px !important;
+        font-size: 1.6rem !important;
+      }
+      #badgeResultScreen .vertical-display-card {
+        max-width: 270px !important;
+        margin-bottom: 20px !important;
+      }
+      #badgeResultScreen .action-buttons-group {
+        gap: 10px !important;
+        width: 100% !important;
+      }
+      #badgeResultScreen .action-btn {
+        min-width: 110px !important;
+        padding: 10px 16px !important;
+        font-size: 0.95rem !important;
+      }
+
+      /* Screen 7-B (Certificate Result View) */
+      #certResultScreen {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        justify-content: flex-start !important;
+      }
+      #certResultScreen .result-title {
+        margin-top: 10px !important;
+        margin-bottom: 8px !important;
+        font-size: 1.5rem !important;
+      }
+      #certResultScreen .horizontal-display-card {
+        max-width: 92vw !important;
+        margin-bottom: 20px !important;
+      }
+      #certResultScreen .action-buttons-group {
+        gap: 10px !important;
+        width: 100% !important;
+      }
+      #certResultScreen .action-btn {
+        min-width: 110px !important;
+        padding: 10px 16px !important;
+        font-size: 0.95rem !important;
+      }
+
+      /* Screen 7-C (Gift / Discount Result View) */
+      #giftResultScreen {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+        justify-content: flex-start !important;
+      }
+      #giftResultScreen .result-title {
+        margin-top: 10px !important;
+        margin-bottom: 15px !important;
+        font-size: 1.5rem !important;
+      }
+      #giftResultScreen .vertical-display-card {
+        max-width: 260px !important;
+        margin-bottom: 18px !important;
+      }
+      #giftResultScreen .action-buttons-group {
+        gap: 8px !important;
+        width: 100% !important;
+      }
+      #giftResultScreen .action-btn {
+        min-width: 95px !important;
+        padding: 10px 12px !important;
+        font-size: 0.88rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SCREEN 1: SPLASH SCREEN -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="logo-wrapper">
+      <svg class="ring-overlay" viewBox="0 0 440 440">
+        <circle class="ring outer-ring" cx="220" cy="220" r="205" />
+        <circle class="ring inner-ring" cx="220" cy="220" r="170" />
+      </svg>
+      <img src="Assets/Logos/logo5th.png" alt="Glory Organizing Logo" class="logo-asset">
+    </div>
+  </div>
+
+  <!-- SCREEN 2: WELCOME SCREEN -->
+  <main class="welcome-screen" id="welcomeScreen">
+    <img src="Assets/Logos/logo5th.png" alt="Glory Organizing Watermark" class="watermark-logo">
+    <h1 class="heading-primary">مرحبًا بك</h1>
+    <h2 class="heading-secondary">في فعالية الذكرى السنوية الخامسة</h2>
+    <p class="body-text">خمس سنوات من الشغف، العمل، والنجاح</p>
+    <p class="body-text">شكرًا لأنك جزء من رحلتنا</p>
+    <button class="next-btn" id="toJourneyBtn">استكشف رحلتنا</button>
+  </main>
+
+  <!-- SCREEN 3: TIMELINE SCREEN -->
+  <section class="journey-screen" id="journeyScreen">
+    <h1 class="journey-title">رحلتنا عبر الأعوام</h1>
+    <p class="journey-subtitle">
+      لكل عام قصة، ولكل إنجاز أصحاب صنعوه. هذه لمحة عن رحلتنا منذ البداية وحتى اليوم.
+    </p>
+
+    <div class="timeline-scroll">
+      <div class="timeline-container">
+        <div class="timeline-line">
+          <div class="timeline-line-progress" id="lineProgress"></div>
+        </div>
+
+        <div class="timeline-node" data-index="0">
+          <div class="node-text">
+            <span class="year-label">2022</span>
+            <span class="node-title">بداية الرحلة</span>
+          </div>
+          <div class="icon-circle"><img src="Assets/Icons/Flag_Icon_white.png" alt="بداية الرحلة"></div>
+        </div>
+
+        <div class="timeline-node" data-index="1">
+          <div class="node-text">
+            <span class="year-label">2023</span>
+            <span class="node-title">بناء الفريق</span>
+          </div>
+          <div class="icon-circle"><img src="Assets/Icons/Team_icon_white.png" alt="بناء الفريق"></div>
+        </div>
+
+        <div class="timeline-node" data-index="2">
+          <div class="node-text">
+            <span class="year-label">2024</span>
+            <span class="node-title">توسع</span>
+          </div>
+          <div class="icon-circle"><img src="Assets/Icons/Globe_iocn_white.png" alt="توسع"></div>
+        </div>
+
+        <div class="timeline-node" data-index="3">
+          <div class="node-text">
+            <span class="year-label">2025</span>
+            <span class="node-title">إنجازات</span>
+          </div>
+          <div class="icon-circle"><img src="Assets/Icons/trophy_icon_white.png" alt="إنجازات"></div>
+        </div>
+
+        <div class="timeline-node" data-index="4">
+          <div class="node-text">
+            <span class="year-label">2026</span>
+            <span class="node-title">آفاق جديدة</span>
+          </div>
+          <div class="icon-circle"><img src="Assets/Icons/Star_icon_white.png" alt="آفاق جديدة"></div>
+        </div>
+
+        <div class="timeline-node" data-index="5">
+          <div class="node-text">
+            <span class="year-label">2027</span>
+            <span class="node-title">آفاق جديده</span>
+          </div>
+          <div class="icon-circle"><img src="/Assets/Icons/load.png" alt="آفاق جديده"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="claim-gift-btn" id="toGiftBtn">احصل على هديتك</button>
+  </section>
+
+  <!-- SCREEN 4: NAME INPUT SCREEN -->
+  <section class="gift-input-screen" id="giftInputScreen">
+    <h1 class="gift-title">بمناسبة الذكرى الخامسة</h1>
+    <h2 class="gift-subtitle">هدية خاصة لك!</h2>
+
+    <form class="input-form" id="nameForm" onsubmit="return false;">
+      <input 
+        type="text" 
+        class="name-input" 
+        id="fullEnglishName" 
+        placeholder="من فضلك أدخل اسمك الثنائي"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button type="button" class="submit-btn" id="submitNameBtn">متابعة</button>
+      <p class="error-msg" id="errorMsg">يرجى إدخال الاسم الثنائي باللغة الإنجليزية (First Second)</p>
+    </form>
+  </section>
+
+  <!-- SCREEN 5: GIFT BOX SCREEN -->
+  <section class="gift-box-screen" id="giftBoxScreen">
+    <div class="gift-image-wrapper" id="interactiveGiftBox">
+      <img src="Assets/Gift Box/Gift box.png" alt="Glory Organizing Gift Box" class="gift-image-asset">
+    </div>
+
+    <h2 class="claim-action-text" id="claimText">اضغط للإستلام هديتك</h2>
+  </section>
+
+  <!-- SCREEN 6: CHOOSE YOUR GIFT -->
+  <section class="card-selection-screen" id="cardSelectionScreen">
+    <h1 class="cards-main-title" id="cardsMainTitle">مبروك! اختر هديتك</h1>
+
+    <div class="cards-grid-container">
+      
+      <!-- Card 1: Badge -->
+      <div class="gift-card-item" data-card-type="badge">
+        <div class="card-preview-wrapper">
+          <img src="Assets/Gift Selection Cards/Desktop/UI Badge Card.png" alt="بادج الذكرى الخامسة" class="card-image-asset card-image-desktop">
+          <img src="Assets/Gift Selection Cards/Mobile/UI Badge Card.png" alt="بادج الذكرى الخامسة" class="card-image-asset card-image-mobile">
+        </div>
+        <button class="card-select-btn">اختيار</button>
+      </div>
+
+      <!-- Card 2: Certificate -->
+      <div class="gift-card-item" data-card-type="certificate">
+        <div class="card-preview-wrapper">
+          <img src="Assets/Gift Selection Cards/Desktop/UI Certificate Card.png" alt="شهادة إلكترونية" class="card-image-asset card-image-desktop">
+          <img src="Assets/Gift Selection Cards/Mobile/UI Certificate Card.png" alt="شهادة إلكترونية" class="card-image-asset card-image-mobile">
+        </div>
+        <button class="card-select-btn">اختيار</button>
+      </div>
+
+      <!-- Card 3: Gift/Discount -->
+      <div class="gift-card-item" data-card-type="gift">
+        <div class="card-preview-wrapper">
+          <img src="Assets/Gift Selection Cards/Desktop/UI Gift Card.png" alt="قسيمة خصم" class="card-image-asset card-image-desktop">
+          <img src="Assets/Gift Selection Cards/Mobile/UI Gift Card.png" alt="قسيمة خصم" class="card-image-asset card-image-mobile">
+        </div>
+        <button class="card-select-btn">اختيار</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SCREEN 7-A: BADGE RESULT VIEW -->
+  <section class="result-view-screen" id="badgeResultScreen">
+    <h1 class="result-title">بادج الذكرى الخامسة</h1>
+    <div class="vertical-display-card">
+      <canvas id="badgeCanvas" class="printable-canvas"></canvas>
+    </div>
+    <div class="action-buttons-group">
+      <button class="action-btn" onclick="downloadCanvas('badgeCanvas', 'Badge_5th_Anniversary.png')">تحميل</button>
+      <button class="action-btn" onclick="printCanvas('badgeCanvas')">طباعة</button>
+      <button class="action-btn btn-gold" onclick="goToEndScreen(badgeResultScreen)">التالي</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 7-B: CERTIFICATE RESULT VIEW -->
+  <section class="result-view-screen" id="certResultScreen">
+    <h1 class="result-title">شهادتك جاهزة</h1>
+    <div class="horizontal-display-card">
+      <canvas id="certCanvas" class="printable-canvas"></canvas>
+    </div>
+    <div class="action-buttons-group">
+      <button class="action-btn" onclick="downloadCanvas('certCanvas', 'Certificate_Of_Appreciation.png')">تحميل</button>
+      <button class="action-btn" onclick="printCanvas('certCanvas')">طباعة</button>
+      <button class="action-btn btn-gold" onclick="goToEndScreen(certResultScreen)">التالي</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 7-C: GIFT/DISCOUNT RESULT VIEW -->
+  <section class="result-view-screen" id="giftResultScreen">
+    <h1 class="result-title">مبروك حصلت على الخصم</h1>
+    <div class="vertical-display-card">
+      <img id="randomGiftImg" src="" alt="قسيمة خصم عشوائية" class="display-card-img">
+    </div>
+    <div class="action-buttons-group">
+      <button class="action-btn" id="downloadGiftBtn">تحميل</button>
+      <button class="action-btn btn-gold" onclick="openRedeemInstructions()">HOW TO REDEEM</button>
+      <button class="action-btn btn-gold" onclick="goToEndScreen(giftResultScreen)">التالي</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 8: END SCREEN -->
+  <section class="end-screen" id="endScreen">
+    <img src="Assets/Logos/Glory Logo Dark.png" alt="Glory Organizing Team Logo" class="end-logo">
+    <h1 class="end-primary-text">شكرًا لكونك جزء من رحلتنا</h1>
+    <h2 class="end-secondary-text">نتطلع إلى المزيد من الإنجازات معًا </h2>
+  </section>
+
+</body>
+</html>
