@@ -9,10 +9,10 @@
   <meta name="apple-mobile-web-app-title" content="Glory 5th Anniversary">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-  <link rel="apple-touch-icon" href="/Assets/Logos/Icon Glory.png">
+  <link rel="apple-touch-icon" href="Assets/Logos/Icon Glory.png">
   <title>Glory - 5th Anniversary</title>
   <link rel="icon" type="image/png" href="Assets/Logos/Icon Glory.png">
-  <script src="script.js"></script>
+  <script src="/script.js"></script>
   <style>
     @font-face {
       font-family: 'GE SS Two';
@@ -928,6 +928,97 @@
     @keyframes spinCounterClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
     @keyframes fadeOutSplash { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
 
+    /* ==========================================
+       TARGETED FIX FOR IPHONE 12/13/14/15 PRO (390px - 430px)
+    ========================================== */
+    @media (max-width: 430px) {
+      body {
+        padding: 10px;
+      }
+
+      .timeline-container {
+        max-width: 290px;
+        margin: 0 auto;
+        gap: 14px;
+      }
+      
+      .timeline-line {
+        left: 24px;
+        top: 25px;
+        bottom: 25px;
+      }
+
+      .timeline-node {
+        gap: 14px;
+      }
+
+      .icon-circle {
+        width: 50px;
+        height: 50px;
+      }
+
+      .icon-circle img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .year-label {
+        font-size: 1.1rem;
+      }
+
+      .node-title {
+        font-size: 0.9rem;
+      }
+
+      .cards-grid-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+      }
+
+      .gift-card-item {
+        width: 100%;
+        max-width: 260px;
+        min-width: 0;
+      }
+
+      .card-preview-wrapper {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        border-radius: 14px;
+      }
+
+      .card-image-desktop {
+        display: none;
+      }
+
+      .card-image-mobile {
+        display: block;
+      }
+
+      .name-input {
+        font-size: 16px;
+        padding: 14px 16px;
+      }
+
+      .next-btn, .submit-btn, .action-btn, .claim-gift-btn {
+        width: 100%;
+        padding: 13px 20px;
+        min-height: 46px;
+      }
+
+      .action-buttons-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .action-buttons-group .action-btn {
+        width: 100%;
+      }
+    }
+
     /* Responsive Media Queries for Mobile/Tablet Breakpoints */
     @media (max-width: 900px) {
       .timeline-scroll {
@@ -939,7 +1030,7 @@
         width: 100%;
         max-width: 280px;
         margin: 0 auto;
-        gap: 16px; /* Optimized spacing based on red marks */
+        gap: 16px;
         padding: 5px 0;
       }
       .timeline-line {
@@ -966,7 +1057,7 @@
         flex-direction: row;
         direction: ltr;
         align-items: center;
-        gap: 18px; /* Precise spacing between circle and text */
+        gap: 18px;
         width: 100%;
       }
       .icon-circle {
@@ -979,7 +1070,7 @@
         flex-direction: column;
         direction: rtl;
         text-align: right;
-        gap: 2px; /* Tight gap between year and title */
+        gap: 2px;
         flex: 1;
         min-width: 0;
       }
@@ -1067,7 +1158,7 @@
       .card-selection-screen,
       .result-view-screen,
       .end-screen {
-        padding: 20px 14px; /* Reduced outer padding for tighter mobile fit */
+        padding: 20px 14px;
       }
 
       .journey-screen {
@@ -1134,7 +1225,7 @@
         width: 130px;
       }
       .name-input {
-        font-size: 16px; /* prevent iOS auto-zoom on focus */
+        font-size: 16px;
         padding: 14px 18px;
       }
       .watermark-logo {
@@ -1236,10 +1327,8 @@
 
     /* ==========================================
        TARGETED MOBILE SPACING ADJUSTMENTS 
-       (Strictly matching your red-marked sketches)
     ========================================== */
     @media (max-width: 600px) {
-      /* Screen 7-A (Badge Result View) */
       #badgeResultScreen {
         padding-top: 20px !important;
         padding-bottom: 20px !important;
@@ -1264,7 +1353,6 @@
         font-size: 0.95rem !important;
       }
 
-      /* Screen 7-B (Certificate Result View) */
       #certResultScreen {
         padding-top: 20px !important;
         padding-bottom: 20px !important;
@@ -1289,7 +1377,6 @@
         font-size: 0.95rem !important;
       }
 
-      /* Screen 7-C (Gift / Discount Result View) */
       #giftResultScreen {
         padding-top: 20px !important;
         padding-bottom: 20px !important;
