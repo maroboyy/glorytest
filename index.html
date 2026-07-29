@@ -11,7 +11,7 @@
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <link rel="apple-touch-icon" href="Assets/Logos/Icon Glory.png">
   <title>Glory - 5th Anniversary</title>
-  <link rel="icon" type="image/png" href="/Assets/Logos/Icon Glory.png">
+  <link rel="icon" type="image/png" href="Assets/Logos/Icon Glory.png">
   <script src="script.js"></script>
   <style>
     @font-face {
@@ -335,20 +335,17 @@
     .timeline-node {
       position: relative;
       z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: grid;
+      grid-template-areas: "year" "icon" "title";
+      grid-template-rows: auto auto auto;
+      justify-items: center;
       cursor: pointer;
       width: 110px;
     }
 
-    .node-text {
-      display: contents;
-    }
-
-    .year-label { order: 1; }
-    .icon-circle { order: 2; }
-    .node-title { order: 3; }
+    .year-label { grid-area: year; }
+    .icon-circle { grid-area: icon; }
+    .node-title { grid-area: title; }
 
     .year-label {
       font-size: clamp(1.2rem, 2.5vw, 1.8rem);
@@ -663,7 +660,6 @@
 
     .card-selection-screen.active .gift-card-item:nth-child(1) { transition-delay: 0.15s; }
     .card-selection-screen.active .gift-card-item:nth-child(2) { transition-delay: 0.30s; }
-    .card-selection-screen.active .gift-card-item:nth-child(3) { transition-delay: 0.45s; }
 
     .card-preview-wrapper {
       position: relative;
@@ -734,6 +730,31 @@
       pointer-events: none;
     }
 
+    /* Finish button shown on the selection screen itself after a card is chosen */
+    .selection-finish-btn {
+      margin-top: 40px;
+      padding: 14px 40px;
+      font-family: inherit;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: var(--gold-primary);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(163, 130, 88, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(15px);
+      transition: all 0.5s ease;
+    }
+
+    .selection-finish-btn.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
     /* ==========================================
        SCREEN 7: RESULT VIEWS
     ========================================== */
@@ -770,17 +791,6 @@
       width: 100%;
       max-width: 360px;
       min-width: 240px;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-      margin-bottom: 35px;
-      position: relative;
-    }
-
-    .horizontal-display-card {
-      width: 100%;
-      max-width: 720px;
-      min-width: 280px;
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
@@ -1021,7 +1031,7 @@
         padding: 14px 16px;
       }
 
-      .next-btn, .submit-btn, .action-btn, .claim-gift-btn {
+      .next-btn, .submit-btn, .action-btn, .claim-gift-btn, .selection-finish-btn {
         width: 100%;
         padding: 13px 20px;
         min-height: 46px;
@@ -1072,33 +1082,28 @@
         transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
       }
       .timeline-node {
-        display: flex;
-        flex-direction: row;
-        direction: ltr;
+        display: grid;
+        grid-template-areas: "icon year" "icon title";
+        grid-template-columns: auto 1fr;
         align-items: center;
-        gap: 18px;
+        column-gap: 18px;
+        row-gap: 2px;
         width: 100%;
+        justify-items: stretch;
       }
       .icon-circle {
-        order: 1;
         flex-shrink: 0;
-      }
-      .node-text {
-        order: 2;
-        display: flex;
-        flex-direction: column;
-        direction: rtl;
-        text-align: right;
-        gap: 2px;
-        flex: 1;
-        min-width: 0;
+        align-self: center;
       }
       .year-label {
         font-size: 1.15rem;
         margin-bottom: 0;
+        text-align: right;
       }
       .node-title {
         font-size: 0.95rem;
+        margin-top: 0;
+        text-align: right;
       }
       .icon-circle {
         width: 54px;
@@ -1117,9 +1122,6 @@
       .gift-card-item {
         max-width: 240px;
         min-width: 0;
-      }
-      .horizontal-display-card {
-        max-width: 90vw;
       }
     }
 
@@ -1216,7 +1218,7 @@
       body {
         padding: 8px;
       }
-      .next-btn, .submit-btn, .action-btn, .claim-gift-btn {
+      .next-btn, .submit-btn, .action-btn, .claim-gift-btn, .selection-finish-btn {
         width: 100%;
         padding: 14px 20px;
         min-height: 48px;
@@ -1316,8 +1318,7 @@
         width: clamp(140px, 30vw, 200px);
         margin-bottom: 14px;
       }
-      .vertical-display-card,
-      .horizontal-display-card {
+      .vertical-display-card {
         margin-bottom: 16px;
         max-height: 55vh;
       }
@@ -1331,7 +1332,7 @@
 
     /* Touch-friendly tap targets */
     @media (hover: none) and (pointer: coarse) {
-      .next-btn, .submit-btn, .action-btn, .claim-gift-btn, .card-select-btn {
+      .next-btn, .submit-btn, .action-btn, .claim-gift-btn, .card-select-btn, .selection-finish-btn {
         min-height: 46px;
       }
       .timeline-node, .gift-card-item, .card-preview-wrapper, .gift-image-wrapper {
@@ -1372,30 +1373,6 @@
         font-size: 0.95rem !important;
       }
 
-      #certResultScreen {
-        padding-top: 20px !important;
-        padding-bottom: 20px !important;
-        justify-content: flex-start !important;
-      }
-      #certResultScreen .result-title {
-        margin-top: 10px !important;
-        margin-bottom: 8px !important;
-        font-size: 1.5rem !important;
-      }
-      #certResultScreen .horizontal-display-card {
-        max-width: 92vw !important;
-        margin-bottom: 20px !important;
-      }
-      #certResultScreen .action-buttons-group {
-        gap: 10px !important;
-        width: 100% !important;
-      }
-      #certResultScreen .action-btn {
-        min-width: 110px !important;
-        padding: 10px 16px !important;
-        font-size: 0.95rem !important;
-      }
-
       #giftResultScreen {
         padding-top: 20px !important;
         padding-bottom: 20px !important;
@@ -1418,6 +1395,21 @@
         min-width: 95px !important;
         padding: 10px 12px !important;
         font-size: 0.88rem !important;
+      }
+    }
+
+    /* ==========================================
+       PRINT FIX: force single page, fit image to one sheet
+    ========================================== */
+    @media print {
+      @page {
+        size: auto;
+        margin: 0;
+      }
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
       }
     }
   </style>
@@ -1459,51 +1451,39 @@
         </div>
 
         <div class="timeline-node" data-index="0">
-          <div class="node-text">
-            <span class="year-label">2022</span>
-            <span class="node-title">بداية الرحلة</span>
-          </div>
+          <span class="year-label">2022</span>
           <div class="icon-circle"><img src="Assets/Icons/Flag_Icon_white.png" alt="بداية الرحلة"></div>
+          <span class="node-title">بداية الرحلة</span>
         </div>
 
         <div class="timeline-node" data-index="1">
-          <div class="node-text">
-            <span class="year-label">2023</span>
-            <span class="node-title">بناء الفريق</span>
-          </div>
+          <span class="year-label">2023</span>
           <div class="icon-circle"><img src="Assets/Icons/Team_icon_white.png" alt="بناء الفريق"></div>
+          <span class="node-title">بناء الفريق</span>
         </div>
 
         <div class="timeline-node" data-index="2">
-          <div class="node-text">
-            <span class="year-label">2024</span>
-            <span class="node-title">توسع</span>
-          </div>
+          <span class="year-label">2024</span>
           <div class="icon-circle"><img src="Assets/Icons/Globe_iocn_white.png" alt="توسع"></div>
+          <span class="node-title">توسع</span>
         </div>
 
         <div class="timeline-node" data-index="3">
-          <div class="node-text">
-            <span class="year-label">2025</span>
-            <span class="node-title">إنجازات</span>
-          </div>
+          <span class="year-label">2025</span>
           <div class="icon-circle"><img src="Assets/Icons/trophy_icon_white.png" alt="إنجازات"></div>
+          <span class="node-title">إنجازات</span>
         </div>
 
         <div class="timeline-node" data-index="4">
-          <div class="node-text">
-            <span class="year-label">2026</span>
-            <span class="node-title">آفاق جديدة</span>
-          </div>
-          <div class="icon-circle"><img src="Assets/Icons/Star_icon_white.png" alt="آفاق جديدة"></div>
+          <span class="year-label">2026</span>
+          <div class="icon-circle"><img src="Assets/Icons/load.png " alt="آفاق جديدة"></div>
+          <span class="node-title">تحول</span>
         </div>
 
         <div class="timeline-node" data-index="5">
-          <div class="node-text">
-            <span class="year-label">2027</span>
-            <span class="node-title">آفاق جديده</span>
-          </div>
-          <div class="icon-circle"><img src="Assets/Icons/load.png" alt="آفاق جديده"></div>
+          <span class="year-label">2027</span>
+          <div class="icon-circle"><img src="Assets/Icons/Star_icon_white.png" alt="آفاق جديده"></div>
+          <span class="node-title">آفاق جديده</span>
         </div>
       </div>
     </div>
@@ -1544,7 +1524,7 @@
     <h1 class="cards-main-title" id="cardsMainTitle">مبروك! اختر هديتك</h1>
 
     <div class="cards-grid-container">
-      
+
       <!-- Card 1: Badge -->
       <div class="gift-card-item" data-card-type="badge">
         <div class="card-preview-wrapper">
@@ -1554,16 +1534,7 @@
         <button class="card-select-btn">اختيار</button>
       </div>
 
-      <!-- Card 2: Certificate -->
-      <div class="gift-card-item" data-card-type="certificate">
-        <div class="card-preview-wrapper">
-          <img src="Assets/Gift Selection Cards/Desktop/UI Certificate Card.png" alt="شهادة إلكترونية" class="card-image-asset card-image-desktop">
-          <img src="Assets/Gift Selection Cards/Mobile/UI Certificate Card.png" alt="شهادة إلكترونية" class="card-image-asset card-image-mobile">
-        </div>
-        <button class="card-select-btn">اختيار</button>
-      </div>
-
-      <!-- Card 3: Gift/Discount -->
+      <!-- Card 2: Gift/Discount -->
       <div class="gift-card-item" data-card-type="gift">
         <div class="card-preview-wrapper">
           <img src="Assets/Gift Selection Cards/Desktop/UI Gift Card.png" alt="قسيمة خصم" class="card-image-asset card-image-desktop">
@@ -1573,6 +1544,8 @@
       </div>
 
     </div>
+
+    <button class="selection-finish-btn" id="selectionFinishBtn">التالي</button>
   </section>
 
   <!-- SCREEN 7-A: BADGE RESULT VIEW -->
@@ -1584,20 +1557,7 @@
     <div class="action-buttons-group">
       <button class="action-btn" onclick="downloadCanvas('badgeCanvas', 'Badge_5th_Anniversary.png')">تحميل</button>
       <button class="action-btn" onclick="printCanvas('badgeCanvas')">طباعة</button>
-      <button class="action-btn btn-gold" onclick="goToEndScreen(badgeResultScreen)">التالي</button>
-    </div>
-  </section>
-
-  <!-- SCREEN 7-B: CERTIFICATE RESULT VIEW -->
-  <section class="result-view-screen" id="certResultScreen">
-    <h1 class="result-title">شهادتك جاهزة</h1>
-    <div class="horizontal-display-card">
-      <canvas id="certCanvas" class="printable-canvas"></canvas>
-    </div>
-    <div class="action-buttons-group">
-      <button class="action-btn" onclick="downloadCanvas('certCanvas', 'Certificate_Of_Appreciation.png')">تحميل</button>
-      <button class="action-btn" onclick="printCanvas('certCanvas')">طباعة</button>
-      <button class="action-btn btn-gold" onclick="goToEndScreen(certResultScreen)">التالي</button>
+      <button class="action-btn btn-gold" onclick="backToCardSelection(badgeResultScreen)">رجوع</button>
     </div>
   </section>
 
@@ -1610,7 +1570,7 @@
     <div class="action-buttons-group">
       <button class="action-btn" id="downloadGiftBtn">تحميل</button>
       <button class="action-btn btn-gold" onclick="openRedeemInstructions()">HOW TO REDEEM</button>
-      <button class="action-btn btn-gold" onclick="goToEndScreen(giftResultScreen)">التالي</button>
+      <button class="action-btn btn-gold" onclick="backToCardSelection(giftResultScreen)">رجوع</button>
     </div>
   </section>
 
