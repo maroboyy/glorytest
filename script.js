@@ -266,16 +266,102 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    window.downloadCanvas = function(canvasId, filename) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const imageURL = canvas.toDataURL('image/png');
+    // ==========================================================
+    // Reusable cross-platform download utility.
+    // Used by BOTH downloadCanvas() and downloadAsset() below.
+    // Desktop + Android Chrome: normal blob <a download> (unchanged behavior).
+    // iOS Safari/Chrome (no reliable programmatic download support):
+    //   1) navigator.share with files, if supported
+    //   2) otherwise open the blob in a new tab so the user can long-press
+    //      "Save Image" (native fallback, no dependency required).
+    // ==========================================================
+    const isIOS = /iP(hone|od|ad)/.test(navigator.platform) ||
+      (navigator.userAgent.includes('Mac') && navigator.maxTouchPoints > 1);
+
+    // On iOS, opens a blank tab SYNCHRONOUSLY (inside the click handler) so
+    // Safari's popup blocker allows it. We navigate this tab later once the
+    // blob is ready, avoiding the async window.open() that Safari can block.
+    function preOpenFallbackTab() {
+      if (!isIOS) return null;
+      try {
+        return window.open('', '_blank');
+      } catch (err) {
+        return null;
+      }
+    }
+
+    async function universalDownload(blob, filename, fallbackTab) {
+      if (!blob) return;
+
+      // iOS: programmatic <a download> is not honored, so prefer better fallbacks.
+      if (isIOS) {
+        try {
+          const file = new File([blob], filename, { type: blob.type || 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file] });
+            if (fallbackTab && !fallbackTab.closed) fallbackTab.close();
+            return;
+          }
+        } catch (err) {
+          // User cancelled share sheet or share failed — fall through to next fallback.
+        }
+
+        // Fallback: show the image in the pre-opened tab so the user can use "Save Image".
+        const blobUrl = window.URL.createObjectURL(blob);
+        if (fallbackTab && !fallbackTab.closed) {
+          fallbackTab.location.href = blobUrl;
+        } else {
+          // Pre-opened tab wasn't available (e.g. blocked) — try opening now anyway.
+          window.open(blobUrl, '_blank');
+        }
+        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 60000);
+        return;
+      }
+
+      // Desktop / Android Chrome: standard blob download link.
+      const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = imageURL;
+      link.href = blobUrl;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    }
+
+    window.downloadCanvas = function(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      // Must open synchronously here (still inside the click handler),
+      // before the async toBlob() callback, so iOS Safari doesn't block it.
+      const fallbackTab = preOpenFallbackTab();
+
+      if (canvas.toBlob) {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            universalDownload(blob, filename, fallbackTab);
+          } else {
+            // toBlob failed unexpectedly — fall back to the data URL method.
+            if (fallbackTab && !fallbackTab.closed) fallbackTab.close();
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }, 'image/png');
+      } else {
+        // Very old browsers without toBlob support.
+        if (fallbackTab && !fallbackTab.closed) fallbackTab.close();
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     };
 
     // Print fix: force the image onto a single sheet of paper, no page breaks / division.
@@ -333,26 +419,28 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.downloadAsset = function(imageSrc) {
+      const filename = imageSrc.split('/').pop();
+      // Must open synchronously here (still inside the click handler),
+      // before the async fetch(), so iOS Safari doesn't block it.
+      const fallbackTab = preOpenFallbackTab();
+
       fetch(imageSrc)
         .then(response => {
           if (!response.ok) throw new Error('Network response was not ok');
           return response.blob();
         })
         .then(blob => {
-          const blobUrl = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.download = imageSrc.split('/').pop();
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(blobUrl);
+          universalDownload(blob, filename, fallbackTab);
         })
         .catch(err => {
           console.error('Download failed:', err);
+          if (fallbackTab && !fallbackTab.closed) {
+            fallbackTab.location.href = imageSrc;
+            return;
+          }
           const link = document.createElement('a');
           link.href = imageSrc;
-          link.download = imageSrc.split('/').pop();
+          link.download = filename;
           link.target = '_blank';
           link.click();
         });
