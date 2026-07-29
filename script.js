@@ -41,7 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
       toJourneyBtn.addEventListener('click', () => {
         if (welcomeScreen) welcomeScreen.classList.remove('active');
         setTimeout(() => {
-          if (journeyScreen) journeyScreen.classList.add('active');
+          if (journeyScreen) {
+            journeyScreen.classList.add('active');
+            // Force a synchronous reflow so mobile Safari/Chrome paint the
+            // timeline icons immediately instead of waiting for the next
+            // user interaction (scroll/tap) to trigger a repaint.
+            void journeyScreen.offsetHeight;
+          }
+          document.querySelectorAll('.icon-circle img').forEach(img => {
+            void img.offsetWidth;
+          });
           updateTimelineLinePosition();
           setTimeout(startTimelineJourney, 800);
         }, 300);
