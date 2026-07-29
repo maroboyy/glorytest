@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const endScreen = document.getElementById('endScreen');
 
     const badgeResultScreen = document.getElementById('badgeResultScreen');
-    const certResultScreen = document.getElementById('certResultScreen');
     const giftResultScreen = document.getElementById('giftResultScreen');
 
     const toJourneyBtn = document.getElementById('toJourneyBtn');
@@ -21,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nodes = document.querySelectorAll('.timeline-node');
     const fullEnglishName = document.getElementById('fullEnglishName');
     const errorMsg = document.getElementById('errorMsg');
+
+    const cardsMainTitle = document.getElementById('cardsMainTitle');
+    const selectionFinishBtn = document.getElementById('selectionFinishBtn');
 
     let userName = '';
 
@@ -53,16 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let timelineStarted = false;
-    let lastScrolledIndex = -1;
-
-    function isVerticalTimeline() {
-      return window.matchMedia('(max-width: 900px)').matches;
-    }
 
     function startTimelineJourney() {
       if (timelineStarted || nodes.length === 0) return;
       timelineStarted = true;
-      lastScrolledIndex = -1;
 
       const totalDuration = 5000; // مدة الحركة الإجمالية بالمللي ثانية (5 ثوانٍ)
       const startTime = performance.now();
@@ -101,8 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
               node.classList.remove('active');
               node.classList.add('passed');
             }
-
-            // العقد التالية تظهر دون أي تمرير تلقائي؛ الرحلة تبقى ثابتة داخل حاوية العرض
           } else {
             // العقد التي لم يصلها الخط بعد
             node.classList.remove('active', 'passed');
@@ -133,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (words.length >= 2 && nameRegex.test(value)) {
           userName = words.slice(0, 2).join(' ').toUpperCase();
           if (errorMsg) errorMsg.classList.remove('visible');
-          
+
           if (giftInputScreen) giftInputScreen.classList.remove('active');
           setTimeout(() => {
             if (giftBoxScreen) giftBoxScreen.classList.add('active');
@@ -199,33 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    function renderCertCanvas(nameText) {
-      const canvas = document.getElementById('certCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.src = 'Assets/Print_Templates/Certificate_Template.png';
-
-      img.onload = async () => {
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        await ensureFontsReady();
-
-        ctx.fillStyle = '#a38258';
-        ctx.font = `bold ${Math.round(canvas.width * 0.036)}px "GE SS Two", "Tajawal", sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        const posX = canvas.width / 2;
-        const posY = canvas.height * 0.535;
-
-        ctx.fillText(nameText, posX, posY);
-      };
-    }
-
     window.downloadCanvas = function(canvasId, filename) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
@@ -238,13 +205,58 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.removeChild(link);
     };
 
+    // Print fix: force the image onto a single sheet of paper, no page breaks / division.
     window.printCanvas = function(canvasId) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
       const dataUrl = canvas.toDataURL('image/png');
-      const windowContent = window.open('', '_blank');
-      windowContent.document.write('<!DOCTYPE html><html><head><title>Print</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;height:100vh;"><img src="' + dataUrl + '" style="max-width:100%;height:auto;" onload="window.print();window.close()"/></body></html>');
-      windowContent.document.close();
+      const printWindow = window.open('', '_blank');
+
+      printWindow.document.write(`<!DOCTYPE html>
+        <html>
+        <head>
+          <title>Print</title>
+          <style>
+            @page {
+              size: auto;
+              margin: 0;
+            }
+            html, body {
+              margin: 0;
+              padding: 0;
+              height: 100%;
+              width: 100%;
+            }
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            img {
+              display: block;
+              max-width: 100vw;
+              max-height: 100vh;
+              width: auto;
+              height: auto;
+              page-break-inside: avoid;
+              break-inside: avoid;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${dataUrl}" id="printImg">
+          <script>
+            const img = document.getElementById('printImg');
+            if (img.complete) {
+              window.print();
+            } else {
+              img.onload = () => window.print();
+            }
+            window.onafterprint = () => window.close();
+          <\/script>
+        </body>
+        </html>`);
+      printWindow.document.close();
     };
 
     window.downloadAsset = function(imageSrc) {
@@ -283,6 +295,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }, 400);
     };
+
+    // Resets the card selection state and shows the selection screen again,
+    // so the user can pick a different gift after viewing a result.
+    window.backToCardSelection = function(currentResultScreen) {
+      if (currentResultScreen) {
+        currentResultScreen.classList.remove('active');
+      }
+
+      cardItems.forEach(item => {
+        item.classList.remove('selected-card', 'unselected-card');
+      });
+
+      if (cardsMainTitle) cardsMainTitle.style.opacity = '1';
+
+      setTimeout(() => {
+        if (cardSelectionScreen) cardSelectionScreen.classList.add('active');
+        if (selectionFinishBtn) selectionFinishBtn.classList.add('show');
+      }, 400);
+    };
+
+    if (selectionFinishBtn) {
+      selectionFinishBtn.addEventListener('click', () => {
+        goToEndScreen(cardSelectionScreen);
+      });
+    }
 
     window.openRedeemInstructions = function() {
       const existingModal = document.getElementById('customRedeemModal');
@@ -391,13 +428,11 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
 
-        const cardsMainTitle = document.getElementById('cardsMainTitle');
         if (cardsMainTitle) cardsMainTitle.style.opacity = '0';
+        if (selectionFinishBtn) selectionFinishBtn.classList.remove('show');
 
         if (selectedType === 'badge') {
           renderBadgeCanvas(userName);
-        } else if (selectedType === 'certificate') {
-          renderCertCanvas(userName);
         } else if (selectedType === 'gift') {
           const randomIndex = Math.floor(Math.random() * couponImages.length);
           const assignedCoupon = couponImages[randomIndex];
@@ -422,8 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => {
             if (selectedType === 'badge' && badgeResultScreen) {
               badgeResultScreen.classList.add('active');
-            } else if (selectedType === 'certificate' && certResultScreen) {
-              certResultScreen.classList.add('active');
             } else if (selectedType === 'gift' && giftResultScreen) {
               giftResultScreen.classList.add('active');
             }
