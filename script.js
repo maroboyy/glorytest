@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const claimText = document.getElementById('claimText');
 
     const lineProgress = document.getElementById('lineProgress');
+    const timelineLine = document.getElementById('timelineLine');
+    const timelineContainer = document.querySelector('.timeline-container');
     const nodes = document.querySelectorAll('.timeline-node');
     const fullEnglishName = document.getElementById('fullEnglishName');
     const errorMsg = document.getElementById('errorMsg');
@@ -40,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (welcomeScreen) welcomeScreen.classList.remove('active');
         setTimeout(() => {
           if (journeyScreen) journeyScreen.classList.add('active');
+          updateTimelineLinePosition();
           setTimeout(startTimelineJourney, 800);
         }, 300);
       });
@@ -56,9 +59,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let timelineStarted = false;
 
+    function isVerticalTimeline() {
+      return window.matchMedia('(max-width: 900px)').matches;
+    }
+
+    // Positions the gold line so it passes exactly through the center of
+    // every icon circle, regardless of how the node heights vary (e.g. when
+    // Arabic titles wrap to two lines). Runs in both desktop (horizontal)
+    // and mobile (vertical) modes.
+    function updateTimelineLinePosition() {
+      if (!timelineLine || !timelineContainer) return;
+      const icons = document.querySelectorAll('.icon-circle');
+      if (icons.length < 2) return;
+
+      const containerRect = timelineContainer.getBoundingClientRect();
+      const firstRect = icons[0].getBoundingClientRect();
+      const lastRect = icons[icons.length - 1].getBoundingClientRect();
+
+      if (isVerticalTimeline()) {
+        // Vertical layout: line runs top-to-bottom, centered on icon column.
+        const firstCenterY = firstRect.top + firstRect.height / 2 - containerRect.top;
+        const lastCenterY = lastRect.top + lastRect.height / 2 - containerRect.top;
+        const centerX = firstRect.left + firstRect.width / 2 - containerRect.left;
+
+        timelineLine.style.top = `${firstCenterY}px`;
+        timelineLine.style.bottom = 'auto';
+        timelineLine.style.height = `${lastCenterY - firstCenterY}px`;
+        timelineLine.style.left = `${centerX}px`;
+        timelineLine.style.right = 'auto';
+        timelineLine.style.width = '3px';
+        timelineLine.style.transform = 'translateX(-50%)';
+      } else {
+        // Horizontal layout: line runs right-to-left (RTL), centered on icon row.
+        const firstCenterX = firstRect.left + firstRect.width / 2 - containerRect.left;
+        const lastCenterX = lastRect.left + lastRect.width / 2 - containerRect.left;
+        const centerY = firstRect.top + firstRect.height / 2 - containerRect.top;
+        const left = Math.min(firstCenterX, lastCenterX);
+        const width = Math.abs(lastCenterX - firstCenterX);
+
+        timelineLine.style.left = `${left}px`;
+        timelineLine.style.right = 'auto';
+        timelineLine.style.width = `${width}px`;
+        timelineLine.style.top = `${centerY}px`;
+        timelineLine.style.height = '4px';
+        timelineLine.style.transform = 'none';
+      }
+    }
+
+    // Recalculate whenever the layout could have changed size.
+    if (timelineContainer && window.ResizeObserver) {
+      const timelineResizeObserver = new ResizeObserver(() => {
+        updateTimelineLinePosition();
+      });
+      timelineResizeObserver.observe(timelineContainer);
+    }
+    window.addEventListener('resize', updateTimelineLinePosition);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(updateTimelineLinePosition, 200);
+    });
+    window.addEventListener('load', updateTimelineLinePosition);
+
     function startTimelineJourney() {
       if (timelineStarted || nodes.length === 0) return;
       timelineStarted = true;
+      updateTimelineLinePosition();
 
       const totalDuration = 5000; // مدة الحركة الإجمالية بالمللي ثانية (5 ثوانٍ)
       const startTime = performance.now();
