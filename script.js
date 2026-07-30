@@ -531,7 +531,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </p>
             <p style="margin: 12px 0; display: flex; align-items: center; gap: 10px;">
               <span style="background: #a38258; color: #fff; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">2</span>
-              <span>تواصل مع مجد عن طريق واتساب</span>
+              <span>تواصل معنا عبر الواتساب 
+ 966504648458</span>
             </p>
           </div>
           <button id="modalOkBtn" style="
